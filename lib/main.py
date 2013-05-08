@@ -1,3 +1,4 @@
+
 import sys
 from character import Character
 from species import Species
@@ -110,6 +111,14 @@ s20.choose_state(divisao, 'continuo')
 print s2.character_state(7).label
 
 print  Similarity.tanimoto(s19, s20)
+
+c1 = [s2,s7, s8, s16, s18, s19, s20 ]
+c2 = [s2,s7, s8, s16, s18, s19, s20 ]
+
+for c in c1:
+	for c_ in c2:
+		coef = Similarity.tanimoto(c, c_)
+		print  '%d -> %d : %f' % (c.code, c_.code, coef)
 
 ## Caracteristiscas de uma especie
 #for cs in s2.characters():

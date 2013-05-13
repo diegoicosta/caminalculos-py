@@ -11,5 +11,8 @@ class Species:
 	def character_state(self, character_code):
 		return self.dic_character_states[character_code][1]
 
+	def states_array(self):
+		return [charac_state[1].symbol for charac_state in self.dic_character_states.itervalues()]
+
 	def characters(self):
 		return [charac_state for charac_state in self.dic_character_states.itervalues()]

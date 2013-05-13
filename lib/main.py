@@ -4,6 +4,12 @@ from character import Character
 from species import Species
 from similarity import Similarity
 
+from pylab import plot,show
+from numpy import vstack,array
+from numpy.random import rand
+from scipy.cluster.vq import kmeans,vq
+
+
 mancha = Character(1, 'Mancha', {'ausente':0, 'nao preenchida':1, 'preenchida':2})
 pinta = Character(2, 'Pintas', {'ausente':0, 'presente':1})
 m_super= Character(3, 'Membro Superior', {'ausente':0, 'presente':1})
@@ -108,17 +114,41 @@ s20.choose_state(olhos, 'presente')
 s20.choose_state(cabeca, 'triangular')
 s20.choose_state(divisao, 'continuo')
 
-print s2.character_state(7).label
+#print s2.character_state(7).label
+#print s20.states_array()
 
-print  Similarity.tanimoto(s19, s20)
+#print  Similarity.tanimoto(s19, s20)
 
 c1 = [s2,s7, s8, s16, s18, s19, s20 ]
 c2 = [s2,s7, s8, s16, s18, s19, s20 ]
 
+data = vstack([c.states_array() for c in c1])
+# data = vstack((rand(5,2) + array([.5,.5]),rand(5,2)))
+#print data
+
+
+# computing K-Means with K = 2 (2 clusters)
+centroids,_ = kmeans(data,3)
+print 'centroids'
+print centroids
+
+# assign each sample to a cluster
+idx,cc = vq(data,centroids)
+print 'indice de cada especie'
+print cc
+
+
+# some plotting using numpy's logical indexing
+plot(data[idx==0,0],data[idx==0,1],'ob',
+     data[idx==1,0],data[idx==1,1],'or')
+plot(centroids[:,0],centroids[:,1],'sg',markersize=8)
+#show()
+
+
 for c in c1:
 	for c_ in c2:
-		coef = Similarity.tanimoto(c, c_)
-		print  '%d -> %d : %f' % (c.code, c_.code, coef)
+		coef = Similarity.intersection(c, c_)
+#		print  '%d -> %d : %f' % (c.code, c_.code, coef)
 
 ## Caracteristiscas de uma especie
 #for cs in s2.characters():
